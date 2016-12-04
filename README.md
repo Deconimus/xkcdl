@@ -11,5 +11,5 @@ Once you've done that, the tool will save a cfg file with the location specified
 
 For example:
 
-    xkcdl "/home/yourname/Pictures/XKCD"
+    java -jar xkcdl.jar "/home/yourname/Pictures/XKCD"
    
