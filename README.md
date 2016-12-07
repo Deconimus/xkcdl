@@ -7,7 +7,7 @@ Is pretty fast since it saves multiple comics in parallel to avoid bottlenecks a
 ## How to use
 
 Just run the tool with the path to where you want your comics downloaded. <br>
-Once you've done that, the tool will save a cfg file with the location specified.
+Once you've done that, it will save a cfg file with the location specified.
 
 For example:
 
