@@ -71,6 +71,10 @@ public class XKCDL {
 			saved.add(i);
 		}
 		
+		Set<Integer> excludes = new HashSet<Integer>();
+		excludes.add(1331);
+		
+		
 		System.out.println("\nDownloading "+(comicsCount-saved.size() - 7)+" comics:\n");
 		
 		ExecutorService exec = Executors.newFixedThreadPool(16);
@@ -79,6 +83,7 @@ public class XKCDL {
 			
 			for (int i = 1; i <= comicsCount; i++) {
 				if (saved.contains(i)) { continue; }
+				if (excludes.contains(i)) { continue; }
 				
 				final int ind = i;
 				
@@ -87,7 +92,7 @@ public class XKCDL {
 					@Override
 					public void run() {
 						
-						String html = Web.getHTML("http://xkcd.com/"+ind, false);
+						String html = Web.getHTML("https://xkcd.com/"+ind, false);
 						
 						String f = "<div id=\"ctitle\">";
 						html = html.substring(html.toLowerCase().indexOf(f)+f.length());
@@ -104,8 +109,6 @@ public class XKCDL {
 						String imgurl = html.substring(0, html.toLowerCase().indexOf("\" title"));
 						imgurl = "http://"+imgurl;
 						
-						BufferedImage img = Web.getImage(imgurl);
-						
 						
 						int lb = (ind / 200) * 200;
 						String subdir = lb+" - "+(lb+199);
@@ -120,7 +123,7 @@ public class XKCDL {
 						if (out.exists()) { return; }
 						if (!out.getParentFile().exists()) { out.getParentFile().mkdirs(); }
 						
-						try { ImageIO.write(img, "png", out); } catch (IOException e) { e.printStackTrace(); }
+						Web.downloadFile(imgurl, out);
 						
 						System.out.println("Saved "+indStr+" - "+title);
 						
@@ -180,7 +183,9 @@ public class XKCDL {
 	
 	private static int getComicsCount() {
 		
-		String html = Web.getHTML("http://xkcd.com/", false);
+		String html = Web.getHTML("https://xkcd.com/", false);
+		
+		if (html == null) { return -1; }
 		
 		String f = "<ul class=\"comicnav\">";
 		html = html.substring(html.toLowerCase().indexOf(f)+f.length());
